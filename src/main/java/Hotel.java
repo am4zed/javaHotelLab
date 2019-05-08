@@ -9,6 +9,7 @@ public class Hotel {
     private ArrayList<Guest> guests;
     private Bedroom bedroom1;
     private Bedroom bedroom2;
+    public ArrayList<Booking> bookings;
 
     public Hotel(String name){
         this.name = name;
@@ -16,6 +17,7 @@ public class Hotel {
         this.diningRooms = new ArrayList<>();
         this.conferenceRooms = new ArrayList<>();
         this.guests = new ArrayList<>();
+        this.bookings = new ArrayList<>();
     }
 
     public String getName() {
@@ -42,6 +44,7 @@ public class Hotel {
         if(bedroom.capacity > bedroom.countGuests()) {
             guests.add(guest);
             bedroom.guests.add(guest);
+            bedroom.capacity -= 1;
         }
     }
 
@@ -49,6 +52,7 @@ public class Hotel {
         if(diningRoom.capacity > diningRoom.countGuests()) {
             guests.add(guest);
             diningRoom.guests.add(guest);
+            diningRoom.capacity -= 1;
         }
     }
 
@@ -56,6 +60,50 @@ public class Hotel {
         if(conferenceRoom.capacity > conferenceRoom.countGuests()) {
             guests.add(guest);
             conferenceRoom.guests.add(guest);
+            conferenceRoom.capacity -= 1;
         }
+    }
+
+    public Booking makeBooking(Bedroom bedroom, int nights){
+        Booking newBooking = new Booking(bedroom, nights);
+        bookings.add(newBooking);
+        return newBooking;
+    }
+
+    public int countBookings(){
+        return bookings.size();
+    }
+
+    public void checkOutGuestFromBedroom(Guest guest, Bedroom bedroom) {
+        bedroom.guests.remove(guest);
+        guests.remove(guest);
+    }
+
+    public void checkOutGuestFromDiningRoom(Guest guest, DiningRoom diningRoom) {
+        diningRoom.guests.remove(guest);
+        guests.remove(guest);
+    }
+
+    public void checkOutGuestFromConferenceRoom(Guest guest, ConferenceRoom conferenceRoom) {
+        conferenceRoom.guests.remove(guest);
+        guests.remove(guest);
+    }
+
+    public int getTotalBill(Booking booking) {
+        return booking.bedroom.nightlyRate * booking.nights;
+    }
+
+    public ArrayList viewVacantRooms(){
+        ArrayList<Bedroom> vacantRooms = new ArrayList<>();
+        for (Bedroom bedroom : bedrooms){
+            if (bedroom.capacity == 0){
+                vacantRooms.add(bedroom);
+            }
+        }
+        return vacantRooms;
+    }
+
+    public int countVacantRooms() {
+        return viewVacantRooms().size();
     }
 }

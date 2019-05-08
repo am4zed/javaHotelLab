@@ -1,9 +1,8 @@
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class HotelTest {
 
@@ -17,12 +16,13 @@ public class HotelTest {
     Guest guest3;
     Guest guest4;
     Guest guest5;
+    Booking booking;
 
     @Before
     public void before(){
         hotel = new Hotel("CodeClan Towers");
-        bedroom1 = new Bedroom(101, "double", 2);
-        bedroom2 = new Bedroom(102, "single", 1);
+        bedroom1 = new Bedroom(101, "double", 2, 50);
+        bedroom2 = new Bedroom(102, "single", 1, 50);
         diningRoom = new DiningRoom("Breakfast Room", 4);
         conferenceRoom = new ConferenceRoom("The Robert Burns Room", 4);
         guest1 = new Guest();
@@ -34,6 +34,7 @@ public class HotelTest {
         hotel.bedrooms.add(bedroom2);
         hotel.diningRooms.add(diningRoom);
         hotel.conferenceRooms.add(conferenceRoom);
+        booking = new Booking(bedroom1, 3);
 
     }
 
@@ -113,6 +114,51 @@ public class HotelTest {
         assertEquals(4, hotel.countGuests());
         assertEquals(4, conferenceRoom.countGuests());
     }
+
+    @Test
+    public void canCheckoutGuestsOfBedroom(){
+        hotel.checkInGuestToBedroom(guest1, bedroom1);
+        hotel.checkOutGuestFromBedroom(guest1, bedroom1);
+        assertEquals(0, hotel.countGuests());
+        assertEquals(0, bedroom1.countGuests());
+    }
+
+    @Test
+    public void canCheckoutGuestsOfDiningRoom(){
+        hotel.checkInGuestToDiningRoom(guest1, diningRoom);
+        hotel.checkOutGuestFromDiningRoom(guest1, diningRoom);
+        assertEquals(0, hotel.countGuests());
+        assertEquals(0, diningRoom.countGuests());
+    }
+
+    @Test
+    public void canCheckoutGuestsOfConferenceRoom(){
+        hotel.checkInGuestToConferenceRoom(guest1, conferenceRoom);
+        hotel.checkOutGuestFromConferenceRoom(guest1, conferenceRoom);
+        assertEquals(0, hotel.countGuests());
+        assertEquals(0, conferenceRoom.countGuests());
+    }
+
+
+//
+    @Test
+    public void canMakeABooking(){
+        assertEquals(0, hotel.countBookings());
+        hotel.makeBooking(bedroom1, 3);
+        assertEquals(1, hotel.countBookings());
+    }
+
+    @Test
+    public void canGetTotalBill(){
+        assertEquals(150, hotel.getTotalBill(booking));
+    }
+
+    @Test
+    public void canSeeVacantBedrooms(){
+        hotel.checkInGuestToBedroom(guest1, bedroom1);
+        assertEquals(1, hotel.countVacantRooms());
+    }
+
 
 
 
